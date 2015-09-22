@@ -1,0 +1,32 @@
+__author__ = 'user1'
+import urllib2
+import json
+def printResults(data):
+    theJSON = json.loads(data)
+    if "title" in theJSON["metadata"]:
+        print theJSON["metadata"]["title"]
+    count = theJSON["metadata"]["count"];
+    print str(count) + " events recorded"
+    for i in theJSON["features"]:
+        #if i["properties"]["mag"] >= 4.0:
+            # output earthquake with magnitude greater than 4 magnitude
+            # print "%2.1f" %i["properties"]["mag"], i["properties"]["place"]
+            #%2.1f means 2digits and 1floating point number
+
+        feltReports = i["properties"]["felt"]
+        if (feltReports != None) and (feltReports > 0):
+            print "%2.1f" %i["properties"]["mag"],i["properties"]["place"]," Reported ",str(feltReports)," times"
+
+def main():
+    urlData = "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson"
+    webUrl = urllib2.urlopen(urlData)
+    print webUrl.getcode()
+    if (webUrl.getcode() == 200):
+        data = webUrl.read()
+        printResults(data)
+    else:
+        print "Received error"
+
+if __name__ == "__main__":
+    main()
+
